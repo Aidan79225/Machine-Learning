@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 
-/* Homework 1 16
+/* Homework 1 17
  * File:   main.cpp
  * Author: s352431
  *
- * Created on 2017年7月12日, 下午 2:39
+ * Created on 2017年7月12日, 下午 3:26
  */
+
 
 #include <iostream>
 #include <cstdlib>
@@ -35,7 +36,7 @@ int main(int argc, char** argv) {
     int count = 0;
     while (mFile >> temp) {
         if (count % y == 0) {
-            mData.push_back(1.0);
+            mData.push_back(1);
         }
         count++;
         mData.push_back(temp);
@@ -54,7 +55,7 @@ int main(int argc, char** argv) {
             float thisY = mData[index(y, j)];
             if ((compute(w, mData, j) * thisY) < 0) {
                 for (int i = 0; i < row - 1; i++) {
-                    w[i] += thisY * mData[index(i, j)];
+                    w[i] += 0.5 * thisY * mData[index(i, j)];
                 }
                 j = 0;
                 count++;
@@ -62,7 +63,7 @@ int main(int argc, char** argv) {
         }
         cout <<endl<< "count:" << count;
         for (int i = 0; i < row - 1; i++) {
-            cout << ", w[" << i << "]:" << w[i];
+            cout << "w[" << i << "]:" << w[i] << ", ";
         }
         --cycle;
     }

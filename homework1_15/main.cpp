@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-/* 
+/* Homework 1 15
  * File:   main.cpp
  * Author: s352431
- *
+ * 
  * Created on 2017年7月11日, 下午 2:59
  */
 #include <iostream>
@@ -31,7 +31,7 @@ int main() {
     int count = 0;
     while(mFile >> temp){
         if(count % y == 0){
-            mData.push_back(1);
+            mData.push_back(1.0);
         }
         count++;
         mData.push_back(temp);
@@ -48,7 +48,7 @@ int main() {
     float w[5] = {0.0f};
     count = 0;
     for(int j = 0 ; j < rowNum ; j++){
-        int thisY = mData[index(y,j)];
+        float thisY = mData[index(y,j)];
         if( (compute(w,mData,j) * thisY) < 0){
             for(int i = 0 ; i< row-1 ; i++){
                 w[i] += thisY * mData[index(i,j)];
