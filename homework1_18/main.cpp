@@ -20,8 +20,9 @@
 using namespace std;
 
 int index(int i, int j);
-int compute(float *w, vector< float > mData, int rowNum);
+float compute(float *w, vector< float > mData, int rowNum);
 void swap(vector<float>& mData, int l, int r);
+int countError(int rowNumTest,vector<float> mTestData, float *w );
 int row = 6;
 int y = row - 1;
 
@@ -43,49 +44,72 @@ int main(int argc, char** argv) {
         count++;
         mData.push_back(temp);
     }
-    count = 0;
+    int maxJ = count / row;
+    for(int j = 0 ; j < maxJ ; j++ ){
+        for (int i = 0; i < row ; i++) {
+            cout << ", data[" << i <<","<<j<< "]:" << mData[index(i,j)];
+        }
+        cout<<endl;
+    }
+    int testCount = 0;
     while (mTest >> temp) {
-        if (count % y == 0) {
+        if (testCount % y == 0) {
             mTestData.push_back(1.0);
         }
-        count++;
+        testCount++;
         mTestData.push_back(temp);
     }
+    
+    
     int rowNum = mData.size() / row;
     int rowNumTest = mTestData.size() / row;
-    int maxCycle = 2000;
+    int maxCycle = 100;
     int cycle = maxCycle;
     int error = 0;
+    
+    float bestW[5] = {0.0f};
     while (cycle) {
         float w[5] = {0.0f};
         int updateNum = 50;
+        int bestE = INT_MAX;
         while(updateNum) {
             int j = rand() % rowNum;
             float thisY = mData[index(y, j)];
-            if ((compute(w, mData, j) * thisY) < 0) {
+            if ((compute(w, mData, j) * thisY) <= 0) {
                 for (int i = 0; i < row - 1; i++) {
                     w[i] += thisY * mData[index(i, j)];
                 }
-                j = 0;
+                int nowE = countError(rowNumTest,mTestData,w);
+                if(nowE < bestE){
+                    for (int i = 0; i < row - 1; i++) {
+                        bestW[i] = w[i];
+                    }
+                    bestE = nowE;
+                }
                 --updateNum;
             }
         }
-        for(int j = 0 ; j < rowNumTest ; j++ ){
-            float thisY = mTestData[index(y, j)];
-            if ((compute(w, mTestData, j) * thisY) < 0) {
-                ++error;
-            }
-        }
-        cout <<endl<< "error:" << error;
+        error += bestE;
+        cout <<endl<<cycle<< ",error:" << bestE;
         for (int i = 0; i < row - 1; i++) {
-            cout << ", w[" << i << "]:" << w[i];
+            cout << ", w[" << i << "]:" << bestW[i];
         }
         --cycle;
     }
-    cout <<endl<< "error:" << error <<", avg error:"<<(float(error)) / (float(maxCycle) * float(rowNum) )<< endl;
+    cout <<endl<< "error:" << error <<", avg error:"<<(float(error)) / (float(maxCycle) * float(rowNumTest) )<< endl;
 
 
     return 0;
+}
+int countError(int rowNumTest,vector<float> mTestData, float *w ){
+    int nowE = 0;
+    for(int j = 0 ; j < rowNumTest ; j++ ){
+        float ty = mTestData[index(y, j)];
+        if ((compute(w, mTestData, j) * ty) < 0) {
+            ++nowE;
+        }
+    }
+    return nowE;
 }
 
 void swap(vector<float>& mData, int l, int r) {
@@ -96,13 +120,14 @@ void swap(vector<float>& mData, int l, int r) {
     }
 }
 
-int compute(float *w, vector< float > mData, int rowNum) {
+float compute(float *w, vector< float > mData, int rowNum) {
     int i = 0;
     float ans = 0.0f;
     for (int i = 0; i < row - 1; i++) {
         ans += w[i] * mData[index(i, rowNum)];
     }
-    return ans > 0.0 ? 1 : -1;
+    if(ans == 0)return -1;
+    else return ans;
 }
 
 int index(int i, int j) {
