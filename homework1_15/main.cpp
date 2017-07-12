@@ -59,7 +59,7 @@ int main() {
     }
     cout<<"count:"<<count<<endl;
     for(int i = 0 ; i< row-1 ; i++){
-        cout<<"w"<<i<<":"<<w[i]<<", ";
+        cout<<"w["<<i<<"]:"<<w[i]<<", ";
     }
     
     return 0;
