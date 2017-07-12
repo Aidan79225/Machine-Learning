@@ -18,7 +18,7 @@
 using namespace std;
 
 int index(int i, int j);
-int compute(float *w, vector< float > mData,int rowNum);
+float compute(float *w, vector< float > mData, int rowNum);
 int row = 6;
 int y = row - 1;
 /*
@@ -47,15 +47,25 @@ int main() {
     cout<<endl;
     float w[5] = {0.0f};
     count = 0;
-    for(int j = 0 ; j < rowNum ; j++){
+    for(int j = 0 ; j < rowNum ; j++);
+    int j = 0;
+    int end = rowNum;
+    while(j != end){
+        if(j >= rowNum)j = j % rowNum;
         float thisY = mData[index(y,j)];
-        if( (compute(w,mData,j) * thisY) < 0){
+        if( (compute(w, mData, j) * thisY) <= 0){
             for(int i = 0 ; i< row-1 ; i++){
                 w[i] += thisY * mData[index(i,j)];
+                cout<<"i:"<<i<<",j:"<<j<<", index"<<index(i,j)<<", ";
             }
-            j = 0;
+            end = j;
             count ++;
+            cout<<endl;
+            for(int i = 0 ; i< row-1 ; i++){
+                cout<<"w["<<i<<"]:"<<w[i]<<", ";
+            }
         }
+        j++;
     }
     cout<<"count:"<<count<<endl;
     for(int i = 0 ; i< row-1 ; i++){
@@ -65,14 +75,16 @@ int main() {
     return 0;
 }
 
-int compute(float *w, vector< float > mData,int rowNum){
+float compute(float *w, vector< float > mData, int rowNum) {
     int i = 0;
     float ans = 0.0f;
-    for(int i = 0 ; i< row-1 ; i++){
-        ans += w[i] * mData[index(i,rowNum)];
+    for (int i = 0; i < row - 1; i++) {
+        ans += w[i] * mData[index(i, rowNum)];
     }
-    return ans > 0.0 ? 1 : -1; 
+    if(ans == 0)return -1;
+    else return ans;
 }
+
 int index(int i, int j){
     return i + j * row;
 }

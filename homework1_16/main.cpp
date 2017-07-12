@@ -19,7 +19,7 @@
 using namespace std;
 
 int index(int i, int j);
-int compute(float *w, vector< float > mData, int rowNum);
+float compute(float *w, vector< float > mData, int rowNum);
 void swap(vector<float>& mData, int l, int r);
 int row = 6;
 int y = row - 1;
@@ -40,27 +40,33 @@ int main(int argc, char** argv) {
         count++;
         mData.push_back(temp);
     }
+    
     int size = mData.size();
     int rowNum = size / row;
     int maxCycle = 2000;
     int cycle = maxCycle;
     while (cycle) {
-
         for (int j = 0; j < rowNum; j++) {
             swap(mData, j, rand() % rowNum);
         }
         float w[5] = {0.0f};
-        for (int j = 0; j < rowNum; j++) {
-            float thisY = mData[index(y, j)];
-            if ((compute(w, mData, j) * thisY) < 0) {
-                for (int i = 0; i < row - 1; i++) {
-                    w[i] += thisY * mData[index(i, j)];
+        
+        
+        int j = 0;
+        int end = rowNum;
+        while(j != end){
+            float thisY = mData[index(y,j)];
+            if( (compute(w, mData, j) * thisY) <= 0){
+                for(int i = 0 ; i< row-1 ; i++){
+                    w[i] += 0.5 * thisY * mData[index(i,j)];
                 }
-                j = 0;
-                count++;
+                end = j;
+                count ++;
             }
+            j++;
+            if(j >= rowNum)j = j % rowNum;
         }
-        cout <<endl<< "count:" << count;
+        cout <<endl<< "cycle:" << cycle;
         for (int i = 0; i < row - 1; i++) {
             cout << ", w[" << i << "]:" << w[i];
         }
@@ -80,13 +86,14 @@ void swap(vector<float>& mData, int l, int r) {
     }
 }
 
-int compute(float *w, vector< float > mData, int rowNum) {
+float compute(float *w, vector< float > mData, int rowNum) {
     int i = 0;
     float ans = 0.0f;
     for (int i = 0; i < row - 1; i++) {
         ans += w[i] * mData[index(i, rowNum)];
     }
-    return ans > 0.0 ? 1 : -1;
+    if(ans == 0)return -1;
+    else return ans;
 }
 
 int index(int i, int j) {

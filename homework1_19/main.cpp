@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-/* Homework 1 18
+/* Homework 1 19
  * File:   main.cpp
  * Author: s352431
  *
- * Created on 2017年7月12日, 下午 4:43
+ * Created on 2017年7月12日, 下午 5:01
  */
 
 
@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
     float bestW[5] = {0.0f};
     while (cycle) {
         float w[5] = {0.0f};
-        int updateNum = 100;
+        int updateNum = 50;
         int bestE = INT_MAX;
         while(updateNum) {
             int j = rand() % rowNum;
@@ -89,10 +89,12 @@ int main(int argc, char** argv) {
                 --updateNum;
             }
         }
-        error += bestE;
-        cout <<endl<<cycle<< ",error:" << bestE;
+        
+        int now = countError(rowNumTest,mTestData,w);
+        error += now;
+        cout <<endl<<cycle<< ",error:" << now;
         for (int i = 0; i < row - 1; i++) {
-            cout << ", w[" << i << "]:" << bestW[i];
+            cout << ", w[" << i << "]:" << w[i];
         }
         --cycle;
     }
